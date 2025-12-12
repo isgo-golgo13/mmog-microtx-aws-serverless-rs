@@ -34,6 +34,12 @@ This resultrs in 16x less user-facing latency.
 
 2. Memory Efficiency
 
+| Metric | Node.js | Rust | Advantage |
+|--------|---------|------|-----------|
+| **Minimum Memory** | 512MB recommended | 128MB sufficient | **Rust 4x more efficient** |
+| **Memory Growth** | Unpredictable (GC) | Deterministic | Rust wins |
+| **Peak Memory** | Spikes during GC | Flat, predictable | Rust wins |
+
 
 Cost Impact (Per Million Invocations)
 ```shell
@@ -78,6 +84,18 @@ println!("{}", result.transaction_id);  // Always exists!
 // No type coercion:
 if payment_result.success {  // Must be bool - strings won't compile
 ```
+
+
+#### Bugs Prevented w/ Rust Type System
+
+ Bug Type | Node.js | Rust |
+|----------|---------|------|
+| Undefined/null access | Runtime crash | Compile error |
+| Wrong parameter types | Silent corruption | Compile error |
+| Missing error handling | Silent failure | Compile error |
+| SQL injection | Possible | Prevented by design |
+| Data races | Possible | Compile error |
+
 
 
 
@@ -170,9 +188,12 @@ match result {
 
 **6. Deployment Package Size**
 
-| Metric            | Node.js.   | Rust        | Advantage             | 
-|--Package Size-----| 50-100MB   | 5-10MB      | Rust 5-20x smaller    |
-| Contentsnode_modules (thousands of files)Single binaryRust winsDeploy TimeSlower (more to upload)FasterRust winsCold Start ImpactMore to loadLess to loadRust wins
+| Metric | Node.js | Rust | Advantage |
+|--------|---------|------|-----------|
+| **Package Size** | 50-100MB | 5-10MB | **Rust 5-20x smaller** |
+| **Contents** | node_modules (thousands of files) | Single binary | Rust wins |
+| **Deploy Time** | Slower (more to upload) | Faster | Rust wins |
+| **Cold Start Impact** | More to load | Less to load | Rust wins |
 
 
 
@@ -235,6 +256,14 @@ Assumptions
 
 Monthly Costs
 
+| | Node.js | Rust |
+|---|---------|------|
+| **GB-seconds** | 1,024,000 | 64,000 |
+| **Compute Cost** | $17.07 | $1.07 |
+| **Request Cost** | $2.00 | $2.00 |
+| **Total** | **$19.07** | **$3.07** |
+
+
 Node.jsRustGB-seconds1,024,00064,000Compute Cost$17.07$1.07Request Cost$2.00$2.00Total$19.07$3.07
 
 Annual Savings: ~$192 per function
@@ -243,7 +272,11 @@ Annual Savings: ~$192 per function
 
 ### Long-Term Maintenance
 
-AspectNode.jsRustDependency securitynpm audit (reactive)Compile-time (proactive)Breaking changesRuntime surprisesCompile errorsTechnical debtAccumulates silentlyCaught at compile time
+| Aspect | Node.js | Rust |
+|--------|---------|------|
+| Dependency security | `npm audit` (reactive) | Compile-time (proactive) |
+| Breaking changes | Runtime surprises | Compile errors |
+| Technical debt | Accumulates silently | Caught at compile time |
 
 
 **11. Side-to-Side Code Comparison**
@@ -356,4 +389,12 @@ sam deploy --guided
 
 **Rust Advantages Summary**
 
-CategoryImprovementCold Start4-80x fasterMemory Usage4x more efficientPackage Size5-20x smallerBug PreventionCompile-time vs runtimeType SafetyComplete vs noneCost~85% reductionConcurrencyM:N vs single-threaded
+| Category | Improvement |
+|----------|-------------|
+| Cold Start | 4-80x faster |
+| Memory Usage | 4x more efficient |
+| Package Size | 5-20x smaller |
+| Bug Prevention | Compile-time vs runtime |
+| Type Safety | Complete vs none |
+| Cost | ~85% reduction |
+| Concurrency | M:N vs single-threaded |
