@@ -2,8 +2,8 @@
 
 ## MMO Game Micro-transaction Lambda API - Node.js Version
 
-> ⚠️ **This version exists for comparison purposes only.**
-> See [COMPARISON.md](../mmog-microtx-rs/COMPARISON.md) for why you should use the Rust version instead.
+**This version exists for head-to-head analysis vs Rust version only.**
+
 
 ### Known Weaknesses
 
