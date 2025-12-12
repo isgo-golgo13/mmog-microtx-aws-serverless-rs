@@ -194,7 +194,7 @@ match result {
 
 
 
-### 7. Concurrency Model**
+### 7. Concurrency Model
 
 Node.js: Single-Threaded Event Loop
 
