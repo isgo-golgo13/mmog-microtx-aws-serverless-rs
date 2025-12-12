@@ -7,6 +7,11 @@ This Git repository provides a dual head-to-head of the mmog-microtx-js (Node.js
 **Bottom Line:** Rust delivers 4-80x faster cold starts, 4x lower memory usage, compile-time bug prevention, and significantly lower AWS costs while providing the exact same functionality.
 
 
+![mmog-microtx-aws-serverless-arch-1](docs/mmog-microtx-aws-serverless-rs-arch-1.png)
+
+
+
+
 ### 1. Cold Start Performance
 Cold starts are critical for Lambda functions—they directly impact user experience and costs.
 
