@@ -1,13 +1,10 @@
 # MMOG Micro-Transaction Serverless AWS (Rust) 
 MMO Game Micro-Transaction Serverless Service using Rust, AWS SDK Rust, Rust Tokio Async and AWS Lambda w/ AWS RDS Aurora vs Node.js Version
 
-
-
-## Executive Summary
 This Git repository provides a dual head-to-head of the mmog-microtx-js (Node.js) and mmog-microtx-rs (Rust) services for a MMO Game Micro-Transaction API served on AWS Lambda.
 
 
-Bottom Line: Rust delivers 4-80x faster cold starts, 4x lower memory usage, compile-time bug prevention, and significantly lower AWS costs while providing the exact same functionality.
+**Bottom Line:** Rust delivers 4-80x faster cold starts, 4x lower memory usage, compile-time bug prevention, and significantly lower AWS costs while providing the exact same functionality.
 
 
 ### 1. Cold Start Performance
