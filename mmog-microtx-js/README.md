@@ -1,6 +1,4 @@
-# mmog-microtx-js
-
-## MMO Game Micro-transaction Lambda API - Node.js Version
+# MMOG Micro-Transaction Serverless AWS (Node.js)
 
 **This version exists for head-to-head analysis vs Rust version only.**
 
