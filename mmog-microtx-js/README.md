@@ -13,6 +13,23 @@
 4. **50-100MB deployment** - Slow deploys
 5. **Single-threaded** - Limited concurrency
 6. **Runtime validation only** - Joi schema errors at runtime
+
+```javascript
+const Joi = require('joi');
+
+const schema = Joi.object({
+    user_id: Joi.string().uuid().required(),
+    amount: Joi.number().positive().required(),
+    currency: Joi.string().valid('USD', 'EUR', 'GBP').required()
+});
+
+// Validation happens at runtime
+const { error, value } = schema.validate(request.body);
+if (error) {
+    return res.status(400).json({ error: error.details });
+}
+```
+
 7. **GC pauses** - Unpredictable latency spikes
 
 ### Structure
