@@ -1,0 +1,8 @@
+{
+  "httpMethod": "POST",
+  "path": "/purchase",
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "body": "{\"player_id\": \"550e8400-e29b-41d4-a716-446655440000\", \"item_id\": \"sword_legendary_001\", \"item_name\": \"Excalibur's Echo\", \"price_cents\": 1999, \"currency\": \"USD\", \"quantity\": 1, \"metadata\": {\"rarity\": \"legendary\", \"damage_bonus\": 150}}"
+}

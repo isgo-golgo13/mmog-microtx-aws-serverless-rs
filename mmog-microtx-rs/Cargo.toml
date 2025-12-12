@@ -1,0 +1,73 @@
+[package]
+name = "mmog-microtx-rs"
+version = "1.0.0"
+edition = "2024"
+authors = ["EngineVector <tomas@enginevector.com>"]
+description = "MMO Game Micro-transaction Lambda API - Rust Version with Strategy Pattern"
+license = "MIT"
+rust-version = "1.82"
+
+# ============================================================================
+# ADVANTAGE: Cargo.toml provides reproducible builds with exact versions
+# ADVANTAGE: Workspace features allow conditional compilation
+# ADVANTAGE: Profile optimizations are declarative and auditable
+# ============================================================================
+
+[dependencies]
+# AWS Lambda Runtime - Official GA support (Nov 2025)
+lambda_runtime = "0.13"
+lambda_http = "0.13"
+
+# Async Runtime - Zero-cost abstractions, M:N threading
+tokio = { version = "1.41", features = ["full"] }
+
+# Serialization - Compile-time derive macros, no reflection overhead
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# AWS SDK - Native async, compile-time API validation
+aws-config = "1.5"
+aws-sdk-rdsdata = "1.51"
+
+# Database - Async PostgreSQL with compile-time query checking (optional)
+sqlx = { version = "0.8", features = [
+    "runtime-tokio",
+    "tls-rustls",
+    "postgres",
+    "uuid",
+    "chrono",
+    "json"
+]}
+
+# Utilities
+uuid = { version = "1.11", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+thiserror = "2.0"  # ADVANTAGE: Type-safe error handling
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# Validation - Compile-time derive macros
+validator = { version = "0.19", features = ["derive"] }
+
+# Async traits for Strategy pattern
+async-trait = "0.1"
+
+[dev-dependencies]
+tokio-test = "0.4"
+mockall = "0.13"  # ADVANTAGE: Type-safe mocking
+
+# ============================================================================
+# ADVANTAGE: Release profile optimizations - impossible in Node.js
+# These result in smaller binaries and faster execution
+# ============================================================================
+[profile.release]
+opt-level = 3          # Maximum optimization
+lto = true             # Link-time optimization - removes dead code
+codegen-units = 1      # Single codegen unit for better optimization
+panic = "abort"        # Smaller binary, no unwinding overhead
+strip = true           # Strip symbols for smaller binary
+
+# Lambda-specific profile for even smaller binaries
+[profile.release-lambda]
+inherits = "release"
+opt-level = "z"        # Optimize for size

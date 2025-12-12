@@ -1,0 +1,162 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  mmog-microtx-js
+  MMO Game Micro-transaction API - Node.js Version
+  
+  WEAKNESSES IN THIS DEPLOYMENT:
+  - 512MB memory default (Node.js needs more for GC overhead)
+  - 15 second timeout (V8 startup + module loading)
+  - No provisioned concurrency (cold starts hurt Node.js more)
+  - Larger deployment package (node_modules bloat)
+
+Globals:
+  Function:
+    # WEAKNESS: Node.js typically needs more memory due to GC overhead
+    MemorySize: 512
+    # WEAKNESS: Longer timeout needed for V8 initialization + module loading
+    Timeout: 15
+    Runtime: nodejs20.x
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        NODE_ENV: production
+        # WEAKNESS: Environment variables are strings - type coercion issues
+        DB_HOST: !Ref DatabaseHost
+        DB_PORT: !Ref DatabasePort
+        DB_NAME: !Ref DatabaseName
+        DB_USER: !Ref DatabaseUser
+        DB_PASSWORD: !Ref DatabasePassword
+
+Parameters:
+  DatabaseHost:
+    Type: String
+    Description: Aurora PostgreSQL cluster endpoint
+  DatabasePort:
+    Type: String
+    Default: "5432"
+  DatabaseName:
+    Type: String
+    Default: mmog_transactions
+  DatabaseUser:
+    Type: String
+  DatabasePassword:
+    Type: String
+    NoEcho: true
+
+Resources:
+  # ============================================================================
+  # Main Microtransaction Function
+  # ============================================================================
+  MicrotxFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: mmog-microtx-js
+      Description: Process MMO game micro-transactions (Node.js)
+      CodeUri: src/
+      Handler: handler.handler
+      # WEAKNESS: Node.js cold starts are significantly slower
+      # Typical cold start: 200-800ms depending on dependencies
+      Events:
+        PurchaseApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MicrotxApi
+            Path: /purchase
+            Method: POST
+        TransactionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MicrotxApi
+            Path: /transactions/{playerId}
+            Method: GET
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref LambdaSecurityGroup
+        SubnetIds:
+          - !Ref PrivateSubnet1
+          - !Ref PrivateSubnet2
+      Policies:
+        - VPCAccessPolicy: {}
+        - Statement:
+            - Effect: Allow
+              Action:
+                - rds-db:connect
+              Resource: !Sub "arn:aws:rds-db:${AWS::Region}:${AWS::AccountId}:dbuser:*/*"
+
+  # ============================================================================
+  # Health Check Function
+  # ============================================================================
+  HealthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: mmog-microtx-js-health
+      Description: Health check endpoint
+      CodeUri: src/
+      Handler: handler.healthHandler
+      MemorySize: 256
+      Timeout: 10
+      Events:
+        HealthApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref MicrotxApi
+            Path: /health
+            Method: GET
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref LambdaSecurityGroup
+        SubnetIds:
+          - !Ref PrivateSubnet1
+          - !Ref PrivateSubnet2
+
+  # ============================================================================
+  # API Gateway
+  # ============================================================================
+  MicrotxApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: mmog-microtx-js-api
+      StageName: prod
+      Description: MMO Game Microtransaction API (Node.js)
+      Cors:
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type,Authorization'"
+        AllowOrigin: "'*'"
+
+  # ============================================================================
+  # VPC Resources (simplified for demo)
+  # ============================================================================
+  LambdaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Lambda functions
+      VpcId: !Ref VpcId
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          CidrIp: 10.0.0.0/16
+
+  # Reference to existing VPC resources
+  VpcId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /mmog/vpc/id
+  PrivateSubnet1:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /mmog/vpc/subnet1
+  PrivateSubnet2:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /mmog/vpc/subnet2
+
+Outputs:
+  ApiEndpoint:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${MicrotxApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+  FunctionArn:
+    Description: Lambda function ARN
+    Value: !GetAtt MicrotxFunction.Arn
+  FunctionName:
+    Description: Lambda function name
+    Value: !Ref MicrotxFunction
