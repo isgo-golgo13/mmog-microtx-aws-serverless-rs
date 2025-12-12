@@ -53,7 +53,8 @@ sam deploy --guided
 | GET | /transactions/{playerId} | Get player's transactions |
 | GET | /health | Health check |
 
-### Why You Should Switch to Rust
+
+### Forces to Switch to Rust
 
 See the Rust version at `mmog-microtx-rs/` for:
 - 4-80x faster cold starts
