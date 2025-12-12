@@ -31,7 +31,7 @@ In a game with millions of players making micro-transactions:
 
 - Rust: 100,000 × 30ms = ~50 minutes of cumulative cold start latency
 
-This resultrs in 16x less user-facing latency.
+This resultrs in **16x** less user-facing latency.
 
 
 ### 2. Memory Efficiency
