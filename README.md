@@ -73,3 +73,98 @@ println!("{}", result.transaction_id);  // Always exists!
 // No type coercion:
 if payment_result.success {  // Must be bool - strings won't compile
 ```
+
+
+
+4. **Strategy Pattern Comparison**
+
+```javascript
+// No contract enforcement - duck typing
+class PaymentStrategy {
+  async processPayment(request) { 
+    throw "Not implemented"; 
+  }
+}
+
+// Hope the object has the right methods
+function processWithStrategy(strategy, request) {
+  return strategy.processPayment(request);  // Could fail at runtime
+}
+
+// Object allocation for each strategy
+// Prototype chain lookup
+// Dynamic dispatch overhead
+// GC pressure from strategy objects
+```
+
+**Rust Strategy Pattern (Zero-Cost Abstractions)**
+
+```rust
+// Compile-time contract enforcement
+#[async_trait]
+pub trait PaymentStrategy: Send + Sync {
+    async fn process_payment(&self, request: PaymentRequest) -> AppResult<PaymentResult>;
+    fn name(&self) -> &'static str;
+}
+
+// Compiler verifies strategy implements trait
+fn process_with_strategy<S: PaymentStrategy>(strategy: &S, request: PaymentRequest) {
+    strategy.process_payment(request)  // Guaranteed to exist!
+}
+
+// With monomorphization:
+// - No virtual dispatch overhead
+// - Strategy methods can be inlined
+// - Zero runtime cost vs direct function call
+```
+
+
+**5. Error Handling**
+
+
+Node.js: Stringly-Typed Errors
+
+```javascript 
+try {
+  await processPurchase(data);
+} catch (error) {
+  // error is 'any' - no guarantees
+  // Could be Error, string, number, object...
+  console.log(error.message);  // Might not exist!
+  
+  // Ad-hoc status codes
+  return { statusCode: 500, body: 'Something went wrong' };
+}
+```
+
+Rust: Typed Error Handling
+
+```rust
+// All error types are known at compile time
+#[derive(Error, Debug)]
+pub enum AppError {
+    #[error("Validation error: {0}")]
+    Validation(String),
+    
+    #[error("Database error: {0}")]
+    Database(#[from] sqlx::Error),
+    
+    #[error("Payment error: {0}")]
+    Payment(String),
+}
+
+// Exhaustive error handling
+match result {
+    Ok(response) => json_response(201, &response),
+    Err(AppError::Validation(msg)) => error_response(400, msg),
+    Err(AppError::Database(_)) => error_response(503, "Database unavailable"),
+    Err(AppError::Payment(msg)) => error_response(402, msg),
+    // Compiler ensures ALL cases handled
+}
+```
+
+**6. Deployment Package Size**
+
+| Metric            | Node.js.   | Rust        | Advantage             | 
+|--Package Size-----| 50-100MB   | 5-10MB      | Rust 5-20x smaller    |
+| Contentsnode_modules (thousands of files)Single binaryRust winsDeploy TimeSlower (more to upload)FasterRust winsCold Start ImpactMore to loadLess to loadRust wins
