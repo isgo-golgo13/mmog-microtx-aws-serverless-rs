@@ -12,7 +12,12 @@ Bottom Line: Rust delivers 4-80x faster cold starts, 4x lower memory usage, comp
 
 1. Cold Start Performance
 Cold starts are critical for Lambda functions—they directly impact user experience and costs.
-MetricNode.jsRustAdvantageCold Start Time200-800ms10-50msRust 4-80x fasterReasonV8 initialization + module loadingNative binary, no runtimeRust winsImpactUser-visible latency spikesNear-instant responseRust wins
+
+| Metric              | Node.js                            | Rust                      | Advantage             |
+|---------------------|------------------------------------|---------------------------|-----------------------|
+| **Cold Start Time** | 200-800ms                          | 10-50ms                   | **Rust 4-80x faster** |
+| **Reason**          | V8 initialization + module loading | Native binary, no runtime | Rust wins             |
+| **Impact**          | User-visible latency spikes        | Near-instant response     | Rust wins             |
 
 
 
