@@ -10,7 +10,7 @@ This Git repository provides a dual head-to-head of the mmog-microtx-js (Node.js
 Bottom Line: Rust delivers 4-80x faster cold starts, 4x lower memory usage, compile-time bug prevention, and significantly lower AWS costs while providing the exact same functionality.
 
 
-1. Cold Start Performance
+### 1. Cold Start Performance
 Cold starts are critical for Lambda functions—they directly impact user experience and costs.
 
 | Metric              | Node.js                            | Rust                      | Advantage             |
@@ -32,7 +32,7 @@ In a game with millions of players making micro-transactions:
 This resultrs in 16x less user-facing latency.
 
 
-2. Memory Efficiency
+### 2. Memory Efficiency
 
 | Metric | Node.js | Rust | Advantage |
 |--------|---------|------|-----------|
@@ -49,7 +49,7 @@ Rust:    128MB × 50ms  × 1,000,000 =   6,400,000 GB-ms
 Cost savings: ~94% reduction in compute costs
 ```
 
-3. Static Type Safety and Runtime Failures Prevention
+### 3. Static Type Safety and Runtime Failures Prevention
 
 **Node.js: Runtime Errors Only**
 
@@ -99,7 +99,7 @@ if payment_result.success {  // Must be bool - strings won't compile
 
 
 
-4. **Strategy Pattern Comparison**
+### 4. Strategy Pattern Comparison
 
 ```javascript
 // No contract enforcement - duck typing
@@ -142,7 +142,7 @@ fn process_with_strategy<S: PaymentStrategy>(strategy: &S, request: PaymentReque
 ```
 
 
-**5. Error Handling**
+### 5. Error Handling
 
 
 Node.js: Stringly-Typed Errors
@@ -186,7 +186,7 @@ match result {
 }
 ```
 
-**6. Deployment Package Size**
+### 6. Deployment Package Size
 
 | Metric | Node.js | Rust | Advantage |
 |--------|---------|------|-----------|
@@ -197,7 +197,7 @@ match result {
 
 
 
-**7. Concurrency Model**
+### 7. Concurrency Model**
 
 Node.js: Single-Threaded Event Loop
 
@@ -225,7 +225,7 @@ async fn process_purchase(data: PurchaseRequest) -> Result<Response> {
 ```
 
 
-**8. AWS Lambda Specific Advantages**
+### 8. AWS Lambda Specific Advantages
 
 - Official AWS Support for Rust 2025
 - Official Lambda SLA metrics coverage
@@ -245,7 +245,7 @@ MemorySize: 128   # Lowest footprint
 Timeout: 5        # Fast startup
 ```
 
-**9. Real-World Cost Analysis**
+### 9. Real-World Cost Analysis
 
 Assumptions
 
@@ -264,13 +264,11 @@ Monthly Costs
 | **Total** | **$19.07** | **$3.07** |
 
 
-Node.jsRustGB-seconds1,024,00064,000Compute Cost$17.07$1.07Request Cost$2.00$2.00Total$19.07$3.07
-
-Annual Savings: ~$192 per function
+**Annual Savings:** ~$192 per function
 
 
 
-### Long-Term Maintenance
+#### Long-Term Maintenance
 
 | Aspect | Node.js | Rust |
 |--------|---------|------|
@@ -279,7 +277,7 @@ Annual Savings: ~$192 per function
 | Technical debt | Accumulates silently | Caught at compile time |
 
 
-**11. Side-to-Side Code Comparison**
+### 11. Side-to-Side Code Comparison
 
 **Request Validation**
 
@@ -311,7 +309,7 @@ let request: PurchaseRequest = serde_json::from_str(&body)?;
 request.validate()?;
 ```
 
-**Database Queries**
+#### Database Queries
 
 Node.js
 
@@ -338,7 +336,7 @@ let result: Transaction = sqlx::query_as(
 ```
 
 
-**12. Migration Path**
+### 12. Migration Path
 
 **Phase 1: Parallel Deployment (Week 1-2)**
 
@@ -387,7 +385,7 @@ sam deploy --guided
 
 ## Conclusion
 
-**Rust Advantages Summary**
+### Rust Advantages Summary
 
 | Category | Improvement |
 |----------|-------------|
