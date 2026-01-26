@@ -1,5 +1,5 @@
-# MMOG Micro-Transaction Serverless AWS (Rust) 
-MMO Game Micro-Transaction Serverless Service using Rust, AWS SDK Rust, Rust Tokio Async and AWS Lambda w/ AWS RDS Aurora vs Node.js Version
+# OG Micro-Transaction Serverless AWS (Rust) 
+Online-Game Micro-Transaction Serverless Service using Rust, AWS SDK Rust, Rust Tokio Async and AWS Lambda w/ AWS RDS Aurora vs Node.js Version
 
 This Git repository provides a dual head-to-head of the mmog-microtx-js (Node.js) and mmog-microtx-rs (Rust) services for a MMO Game Micro-Transaction API served on AWS Lambda.
 
