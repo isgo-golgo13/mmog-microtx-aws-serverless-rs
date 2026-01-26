@@ -1,9 +1,9 @@
 [package]
-name = "mmog-microtx-rs"
+name = "og-serverless-tx-rs"
 version = "1.0.0"
 edition = "2024"
-authors = ["EngineVector <tomas@enginevector.com>"]
-description = "MMO Game Micro-transaction Lambda API - Rust Version with Strategy Pattern"
+authors = ["ChargeGun <info@chargegun.io>"]
+description = "Online-Game Micro-transaction Lambda API - Rust Version with Strategy Pattern"
 license = "MIT"
 rust-version = "1.82"
 

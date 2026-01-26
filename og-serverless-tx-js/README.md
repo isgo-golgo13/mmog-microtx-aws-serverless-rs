@@ -1,4 +1,4 @@
-# MMOG Micro-Transaction Serverless AWS (Node.js)
+# OG Micro-Transaction Serverless AWS (Node.js)
 
 **This version exists for head-to-head analysis vs Rust version only.**
 

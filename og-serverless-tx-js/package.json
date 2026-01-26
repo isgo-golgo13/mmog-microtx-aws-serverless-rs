@@ -1,7 +1,7 @@
 {
-  "name": "mmog-microtx-js",
+  "name": "og-serverless-tx-js",
   "version": "1.0.0",
-  "description": "MMO Game Micro-transaction Lambda API - Node.js Version",
+  "description": "Online-Game Micro-transaction Lambda API - Node.js Version",
   "main": "src/handler.js",
   "scripts": {
     "test": "jest --coverage",
@@ -31,6 +31,6 @@
     "microtransaction",
     "gaming"
   ],
-  "author": "EngineVector",
+  "author": "ChargeGun",
   "license": "MIT"
 }
